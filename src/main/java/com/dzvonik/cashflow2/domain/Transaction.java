@@ -1,6 +1,5 @@
 package com.dzvonik.cashflow2.domain;
 
-import com.dzvonik.cashflow.domain.entity.enums.TransactionType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +30,10 @@ import java.time.LocalDate;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Transaction {
+
+    enum TransactionType {
+        INCOME, EXPENSE;
+    }
 
     @Id
     @SequenceGenerator(name = "seq_transaction", sequenceName = "seq_transaction")

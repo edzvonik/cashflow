@@ -1,8 +1,9 @@
-package com.dzvonik.cashflow.domain.entity;
+package com.dzvonik.cashflow2.domain;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.List;
 
@@ -39,7 +40,17 @@ class CategoryTest {
 
     @Test
     void equalsAndHashCode() {
+        Transaction transaction1 = Mockito.mock(Transaction.class);
+        Transaction transaction2 = Mockito.mock(Transaction.class);
+        Account account1 = Mockito.mock(Account.class);
+        Account account2 = Mockito.mock(Account.class);
+        Category category1 = Mockito.mock(Category.class);
+        Category category2 = Mockito.mock(Category.class);
+
         EqualsVerifier.forClass(User.class)
+                .withPrefabValues(Transaction.class, transaction1, transaction2)
+                .withPrefabValues(Account.class, account1, account2)
+                .withPrefabValues(Category.class, category1, category2)
                 .suppress(Warning.SURROGATE_KEY)
                 .verify();
     }
