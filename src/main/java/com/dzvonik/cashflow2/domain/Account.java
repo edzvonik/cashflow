@@ -46,11 +46,6 @@ public class Account {
     @Column(nullable = false)
     private String currency;
 
-    //
-    //
-//    @Column(nullable = false)
-//    private BigDecimal balance;
-
     @Embedded
     @ElementCollection
     private List<AccountSubtotal> subtotals;
