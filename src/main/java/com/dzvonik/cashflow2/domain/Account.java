@@ -46,7 +46,6 @@ public class Account {
     @Column(nullable = false)
     private String currency;
 
-    // delete
 //    @Column(nullable = false)
 //    private BigDecimal balance;
 
