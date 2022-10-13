@@ -10,6 +10,9 @@ import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -43,8 +46,13 @@ public class Account {
     @Column(nullable = false)
     private String currency;
 
-    @Column(nullable = false)
-    private BigDecimal balance;
+    // delete
+//    @Column(nullable = false)
+//    private BigDecimal balance;
+
+    @Embedded
+    @ElementCollection
+    private List<AccountSubtotal> subtotals;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
