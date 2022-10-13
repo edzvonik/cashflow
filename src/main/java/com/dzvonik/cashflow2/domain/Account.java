@@ -47,6 +47,7 @@ public class Account {
     private String currency;
 
     //
+    //
 //    @Column(nullable = false)
 //    private BigDecimal balance;
 
