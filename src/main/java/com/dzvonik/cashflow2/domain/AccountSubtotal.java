@@ -20,14 +20,14 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Embeddable
-@EqualsAndHashCode(of = {"calculateAt", "subtotal"})
-@ToString(of = {"account", "calculateAt", "subtotal"})
+@EqualsAndHashCode(of = {"calculatedAt"})
+@ToString(of = {"calculatedAt", "subtotal"})
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
 public class AccountSubtotal {
 
-    @JoinColumn(name = "account_id")
     @Column(nullable = false)
+    @JoinColumn(name = "account_id")
     private Account account;
 
     @CreationTimestamp

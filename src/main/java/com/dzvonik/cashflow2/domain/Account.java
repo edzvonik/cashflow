@@ -11,7 +11,6 @@ import lombok.ToString;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,7 +22,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -32,7 +30,7 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"categories", "transactions"})
+@ToString(exclude = {"categories", "transactions", "subtotals"})
 public class Account {
 
     @Id
@@ -47,7 +45,7 @@ public class Account {
     private String currency;
 
     @Embedded
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     private List<AccountSubtotal> subtotals;
 
     @ManyToMany(fetch = FetchType.LAZY)
