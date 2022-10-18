@@ -10,9 +10,6 @@ import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,7 +20,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -32,7 +28,7 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"categories", "transactions"})
+@ToString(exclude = {"categories", "transactions", "subtotals"})
 public class Account {
 
     @Id
@@ -46,11 +42,8 @@ public class Account {
     @Column(nullable = false)
     private String currency;
 
-//    @Column(nullable = false)
-//    private BigDecimal balance;
-
-    @Embedded
-    @ElementCollection
+    @JoinColumn(name = "account_id")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<AccountSubtotal> subtotals;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -64,5 +57,16 @@ public class Account {
     @JoinColumn(name = "account_id")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
+
+    // calculateIncomes
+    // calculateExpenses
+    // calculateTransactions
+    // calculateTransactionsByCategory
+
+    // Работа с subtotal
+    // addTransaction(Long categoryId, Transaction t)
+    // editTransaction(Long categoryId, Transaction newT)
+    // removeTransaction(Long transactionId)
+
 
 }

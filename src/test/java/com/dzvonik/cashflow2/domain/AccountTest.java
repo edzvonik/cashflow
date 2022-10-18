@@ -5,7 +5,6 @@ import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,12 +22,13 @@ class AccountTest {
     void builder_WhenSetValues_ThenReturnValues() {
         List<Transaction> transactions = mock(Transaction.class);
         List<Category> categories = mock(Category.class);
+        List<AccountSubtotal> subtotals = mock(AccountSubtotal.class);
 
         Account accountWithData = Account.builder()
                 .id(5L)
                 .title("Cash")
                 .currency("USD")
-                .balance(new BigDecimal("0.01"))
+                .subtotals(subtotals)
                 .categories(categories)
                 .transactions(transactions)
                 .build();
@@ -36,7 +36,7 @@ class AccountTest {
         assertThat(accountWithData.getId()).isEqualTo(5L);
         assertThat(accountWithData.getTitle()).isEqualTo("Cash");
         assertThat(accountWithData.getCurrency()).isEqualTo("USD");
-        assertThat(accountWithData.getBalance()).isEqualTo(new BigDecimal("0.01"));
+        assertThat(accountWithData.getSubtotals()).containsExactlyInAnyOrderElementsOf(subtotals);
         assertThat(accountWithData.getCategories()).containsExactlyInAnyOrderElementsOf(categories);
         assertThat(accountWithData.getTransactions()).containsExactlyInAnyOrderElementsOf(transactions);
     }
@@ -47,7 +47,6 @@ class AccountTest {
                 .id(0L)
                 .title("Card")
                 .currency("RUB")
-                .balance(new BigDecimal("0.00"))
                 .build();
 
         assertThat(accountWithData.toString()).contains(
