@@ -10,8 +10,6 @@ import lombok.ToString;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -44,8 +42,8 @@ public class Account {
     @Column(nullable = false)
     private String currency;
 
-    @Embedded
-    @ElementCollection(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<AccountSubtotal> subtotals;
 
     @ManyToMany(fetch = FetchType.LAZY)
@@ -59,5 +57,16 @@ public class Account {
     @JoinColumn(name = "account_id")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
+
+    // calculateIncomes
+    // calculateExpenses
+    // calculateTransactions
+    // calculateTransactionsByCategory
+
+    // Работа с subtotal
+    // addTransaction(Long categoryId, Transaction t)
+    // editTransaction(Long categoryId, Transaction newT)
+    // removeTransaction(Long transactionId)
+
 
 }

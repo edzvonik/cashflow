@@ -20,23 +20,21 @@ class AccountSubtotalTest {
 
     @Test
     void constructor_WhenSetValues_ThenReturnValues() {
-        Account accountMock = Mockito.mock(Account.class);
         LocalDateTime now = LocalDateTime.now();
         BigDecimal subtotal = new BigDecimal("105.4");
 
-        AccountSubtotal accountSubtotal = new AccountSubtotal(accountMock, now, subtotal);
-        assertThat(accountSubtotal.getAccount()).isEqualTo(accountMock);
+        AccountSubtotal accountSubtotal = new AccountSubtotal(1L, now, subtotal);
+        assertThat(accountSubtotal.getId()).isEqualTo(1L);
         assertThat(accountSubtotal.getCalculatedAt()).isEqualTo(now);
         assertThat(accountSubtotal.getSubtotal()).isEqualTo(subtotal);
     }
 
     @Test
     void toString_WhenCall_ThenReturnStringRepresentation() {
-        Account accountMock = Mockito.mock(Account.class);
         LocalDateTime now = LocalDateTime.now();
         BigDecimal subtotal = new BigDecimal("105.4");
 
-        AccountSubtotal accountSubtotal = new AccountSubtotal(accountMock, now, subtotal);
+        AccountSubtotal accountSubtotal = new AccountSubtotal(1L, now, subtotal);
         assertThat(accountSubtotal.toString()).contains(
                 now.toString(),
                 subtotal.toString()
@@ -50,7 +48,7 @@ class AccountSubtotalTest {
 
         EqualsVerifier.forClass(AccountSubtotal.class)
                 .withPrefabValues(Account.class, account1, account2)
-                .suppress(Warning.ALL_FIELDS_SHOULD_BE_USED)
+                .suppress(Warning.SURROGATE_KEY)
                 .verify();
     }
 
