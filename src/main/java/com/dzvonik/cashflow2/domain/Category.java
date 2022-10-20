@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -38,6 +39,14 @@ public class Category {
     @JoinColumn(name = "category_id")
     @OneToMany
     private List<Transaction> transactions;
+
+    public List<Transaction> getTransactions() {
+        return Collections.unmodifiableList(transactions);
+    }
+
+    public void addTransaction(Transaction newTransaction) {
+        transactions.add(newTransaction);
+    }
 
 }
 

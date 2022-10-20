@@ -5,10 +5,16 @@ import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AccountTest {
 
@@ -74,8 +80,50 @@ class AccountTest {
                 .verify();
     }
 
+    @Test
+    void getTransactions_WhenAddThroughGetter_ThenThrowException() {
+        Account account = Account.builder()
+                .id(1L)
+                .title("Cash")
+                .transactions(new ArrayList<>(mock(Transaction.class)))
+                .categories(new ArrayList<>(mock(Category.class)))
+                .subtotals(new ArrayList<>(mock(AccountSubtotal.class)))
+                .build();
+
+        Exception exception = assertThrows(UnsupportedOperationException.class, () -> {
+            account.getTransactions().add(Mockito.mock(Transaction.class));
+        });
+    }
+
+    @Test
+    void addTransaction_WhenCall_ThenAddTransactionToTransactionAndCategory() {
+        Account account = Account.builder()
+                .id(1L)
+                .title("Cash")
+                .currency("RUB")
+                .subtotals(mock(AccountSubtotal.class))
+                .categories(mock(Category.class))
+                .transactions(mock(Transaction.class))
+                .build();
+        Transaction transaction = Transaction.builder()
+                .id(1L)
+                .amount(new BigDecimal("503.2"))
+                .date(LocalDate.of(2022, 10, 19))
+                .type(Transaction.TransactionType.INCOME)
+                .comment("New transaction")
+                .account(account)
+                .category(account.getCategories().get(0))
+                .build();
+
+        account.addTransaction(transaction);
+
+        assertThat(account.getTransactions()).contains(transaction);
+        assertThat(account.getCategories().get(transaction.getCategory().getId().intValue()));
+
+    }
+
     private <T> List<T> mock(Class<T> c) {
-        return List.of(org.mockito.Mockito.mock(c));
+        return new ArrayList<>(List.of(org.mockito.Mockito.mock(c)));
     }
 
 }

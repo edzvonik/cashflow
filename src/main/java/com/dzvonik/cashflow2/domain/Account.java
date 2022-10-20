@@ -20,6 +20,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -49,14 +50,28 @@ public class Account {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "account_category",
-            joinColumns = { @JoinColumn(name = "account_id") },
-            inverseJoinColumns = { @JoinColumn(name = "category_id") }
+            joinColumns = {@JoinColumn(name = "account_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id")}
     )
     private List<Category> categories;
 
     @JoinColumn(name = "account_id")
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> transactions;
+
+    public List<Transaction> getTransactions() {
+        return Collections.unmodifiableList(transactions);
+    }
+
+    public void addTransaction(Transaction newTransaction) {
+        transactions.add(newTransaction);
+        int categoryIndex = categories.indexOf(newTransaction.getCategory());
+        categories.get(categoryIndex).addTransaction(newTransaction);
+    }
+
+    // addCategory() {
+    //  добавить категорию ко всем счетам пользователя
+    // }
 
     // calculateIncomes
     // calculateExpenses
