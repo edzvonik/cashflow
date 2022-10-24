@@ -1,4 +1,4 @@
-package com.dzvonik.cashflow2.domain;
+package com.dzvonik.cashflow2.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -45,8 +45,11 @@ public class User {
     @Column(nullable = false)
     private String baseCurrency;
 
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @JoinColumn(name = "user_id")
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Account> accounts;
 
 }

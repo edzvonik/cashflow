@@ -1,4 +1,4 @@
-package com.dzvonik.cashflow2.domain;
+package com.dzvonik.cashflow2.model;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,7 +39,10 @@ public class Category {
     private String title;
 
     @JoinColumn(name = "category_id")
-    @OneToMany
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL
+    )
     private List<Transaction> transactions;
 
     public List<Transaction> getTransactions() {
