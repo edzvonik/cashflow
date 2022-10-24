@@ -1,4 +1,4 @@
-package com.dzvonik.cashflow2.domain;
+package com.dzvonik.cashflow2.model;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -20,23 +20,37 @@ class AccountSubtotalTest {
 
     @Test
     void constructor_WhenSetValues_ThenReturnValues() {
-        LocalDateTime now = LocalDateTime.now();
-        BigDecimal subtotal = new BigDecimal("105.4");
+        LocalDateTime calculatedAt = LocalDateTime.of(2022, 10, 23, 23, 50);
+        LocalDateTime updatedAt = LocalDateTime.now();
+        BigDecimal subtotal = new BigDecimal("1553.323");
 
-        AccountSubtotal accountSubtotal = new AccountSubtotal(1L, now, subtotal);
+        AccountSubtotal accountSubtotal = AccountSubtotal.builder()
+                .id(1L)
+                .subtotal(subtotal)
+                .calculatedAt(calculatedAt)
+                .updatedAt(updatedAt)
+                .build();
         assertThat(accountSubtotal.getId()).isEqualTo(1L);
-        assertThat(accountSubtotal.getCalculatedAt()).isEqualTo(now);
+        assertThat(accountSubtotal.getCalculatedAt()).isEqualTo(calculatedAt);
+        assertThat(accountSubtotal.getUpdatedAt()).isEqualTo(updatedAt);
         assertThat(accountSubtotal.getSubtotal()).isEqualTo(subtotal);
     }
 
     @Test
     void toString_WhenCall_ThenReturnStringRepresentation() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime calculatedAt = LocalDateTime.of(2021, 9, 10, 9, 23);
+        LocalDateTime updatedAt = LocalDateTime.of(2022, 10, 24, 10, 20);
         BigDecimal subtotal = new BigDecimal("105.4");
 
-        AccountSubtotal accountSubtotal = new AccountSubtotal(1L, now, subtotal);
+        AccountSubtotal accountSubtotal = AccountSubtotal.builder()
+                .id(1L)
+                .subtotal(subtotal)
+                .calculatedAt(calculatedAt)
+                .updatedAt(updatedAt)
+                .build();
         assertThat(accountSubtotal.toString()).contains(
-                now.toString(),
+                calculatedAt.toString(),
+                updatedAt.toString(),
                 subtotal.toString()
         );
     }

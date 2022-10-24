@@ -1,4 +1,4 @@
-package com.dzvonik.cashflow2.domain;
+package com.dzvonik.cashflow2.model;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -12,8 +12,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AccountTest {
@@ -28,13 +26,11 @@ class AccountTest {
     void builder_WhenSetValues_ThenReturnValues() {
         List<Transaction> transactions = mock(Transaction.class);
         List<Category> categories = mock(Category.class);
-        List<AccountSubtotal> subtotals = mock(AccountSubtotal.class);
 
         Account accountWithData = Account.builder()
                 .id(5L)
                 .title("Cash")
                 .currency("USD")
-                .subtotals(subtotals)
                 .categories(categories)
                 .transactions(transactions)
                 .build();
@@ -42,7 +38,6 @@ class AccountTest {
         assertThat(accountWithData.getId()).isEqualTo(5L);
         assertThat(accountWithData.getTitle()).isEqualTo("Cash");
         assertThat(accountWithData.getCurrency()).isEqualTo("USD");
-        assertThat(accountWithData.getSubtotals()).containsExactlyInAnyOrderElementsOf(subtotals);
         assertThat(accountWithData.getCategories()).containsExactlyInAnyOrderElementsOf(categories);
         assertThat(accountWithData.getTransactions()).containsExactlyInAnyOrderElementsOf(transactions);
     }
@@ -87,7 +82,6 @@ class AccountTest {
                 .title("Cash")
                 .transactions(new ArrayList<>(mock(Transaction.class)))
                 .categories(new ArrayList<>(mock(Category.class)))
-                .subtotals(new ArrayList<>(mock(AccountSubtotal.class)))
                 .build();
 
         Exception exception = assertThrows(UnsupportedOperationException.class, () -> {
@@ -96,30 +90,44 @@ class AccountTest {
     }
 
     @Test
-    void addTransaction_WhenCall_ThenAddTransactionToTransactionAndCategory() {
+    void getCategoryById_WhenCall_ThenReturnCategory() {
+        Category category = new Category(1L, "Test_Category", mock(Transaction.class));
         Account account = Account.builder()
                 .id(1L)
                 .title("Cash")
                 .currency("RUB")
-                .subtotals(mock(AccountSubtotal.class))
-                .categories(mock(Category.class))
+                .lastSubtotal(Mockito.mock(AccountSubtotal.class))
+                .categories(new ArrayList<>(List.of(category)))
                 .transactions(mock(Transaction.class))
                 .build();
-        Transaction transaction = Transaction.builder()
+
+        assertThat(account.getCategoryById(1L).getTitle()).isEqualTo("Test_Category");
+    }
+
+    @Test
+    void addTransaction_WhenCall_ThenAddTransactionToTransactionAndCategory() {
+        Category category = new Category(1L, "Test_Category", mock(Transaction.class));
+        Account account = Account.builder()
                 .id(1L)
-                .amount(new BigDecimal("503.2"))
-                .date(LocalDate.of(2022, 10, 19))
-                .type(Transaction.TransactionType.INCOME)
-                .comment("New transaction")
-                .account(account)
-                .category(account.getCategories().get(0))
+                .title("Cash")
+                .currency("RUB")
+                .lastSubtotal(Mockito.mock(AccountSubtotal.class))
+                .categories(new ArrayList<>(List.of(category)))
+                .transactions(mock(Transaction.class))
                 .build();
 
-        account.addTransaction(transaction);
+        Transaction transaction = Transaction.builder()
+                .id(4L)
+                .amount(new BigDecimal(403.2))
+                .type(TransactionType.INCOME)
+                .date(LocalDate.of(2022, 10, 24))
+                .comment("Test transaction")
+                .build();
 
-        assertThat(account.getTransactions()).contains(transaction);
-        assertThat(account.getCategories().get(transaction.getCategory().getId().intValue()));
+        account.addTransaction(transaction, 1L);
 
+        assertThat(account.getTransactions().contains(transaction)).isTrue();
+        assertThat(account.getCategoryById(category.getId()).getTransactions().contains(transaction)).isTrue();
     }
 
     private <T> List<T> mock(Class<T> c) {

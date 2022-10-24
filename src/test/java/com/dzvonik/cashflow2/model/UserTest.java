@@ -1,4 +1,4 @@
-package com.dzvonik.cashflow2.domain;
+package com.dzvonik.cashflow2.model;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
@@ -10,31 +10,45 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-class CategoryTest {
+class UserTest {
 
     @Test
     void defaultConstructor_WhenCreatedWithReflection_ThenNoExceptionThrown() {
-        assertThatCode(() -> Category.class.getDeclaredConstructor().newInstance())
+        assertThatCode(() -> User.class.getDeclaredConstructor().newInstance())
                 .doesNotThrowAnyException();
     }
 
     @Test
-    void constructor_WhenSetValues_ThenReturnValues() {
-        List<Transaction> transactions = mock();
-        Category categoryWithData = new Category(3L, "Home", transactions);
+    void builder_WhenSetValues_ThenReturnValues() {
+        List<Account> accounts = mock();
+        User userWithData = User.builder()
+                .id(7L)
+                .name("Test1")
+                .email("test@email.com")
+                .baseCurrency("USD")
+                .accounts(accounts)
+                .build();
 
-        assertThat(categoryWithData.getId()).isEqualTo(3L);
-        assertThat(categoryWithData.getTitle()).isEqualTo("Home");
-        assertThat(categoryWithData.getTransactions()).containsExactlyInAnyOrderElementsOf(transactions);
+        assertThat(userWithData.getId()).isEqualTo(7L);
+        assertThat(userWithData.getName()).isEqualTo("Test1");
+        assertThat(userWithData.getEmail()).isEqualTo("test@email.com");
+        assertThat(userWithData.getBaseCurrency()).isEqualTo("USD");
+        assertThat(userWithData.getAccounts()).containsExactlyInAnyOrderElementsOf(accounts);
     }
 
     @Test
     void toString_WhenCall_ThenReturnStringRepresentation() {
-        Category categoryWithData = new Category(0L, "Home", mock());
+        User userWithData = User.builder()
+                .id(0L)
+                .name("Test2")
+                .email("test@email.com")
+                .baseCurrency("RUB")
+                .build();
 
-        assertThat(categoryWithData.toString()).contains(
-            "id=0",
-            "title=Home"
+        assertThat(userWithData.toString()).contains(
+                "id=0",
+                "name=Test2",
+                "email=test@email.com"
         );
     }
 
@@ -55,8 +69,8 @@ class CategoryTest {
                 .verify();
     }
 
-    private List<Transaction> mock() {
-        return List.of(org.mockito.Mockito.mock(Transaction.class));
+    private List<Account> mock() {
+        return List.of(org.mockito.Mockito.mock(Account.class));
     }
 
 }
