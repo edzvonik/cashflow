@@ -23,6 +23,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -45,17 +46,7 @@ public class Account {
     @Column(nullable = false)
     private String currency;
 
-    @ManyToOne
-    @JoinFormula(
-            "select as.id"
-            + "from account_subtotal as"
-            + "where as.account_id = id"
-            + "order by as.created_at desc"
-            + "limit 1;"
-    )
-    private AccountSubtotal lastSubtotal;
-
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "account_category",
             joinColumns = @JoinColumn(name = "account_id"),
@@ -89,6 +80,8 @@ public class Account {
     public Category getCategoryById(Long id) {
         return categories.stream().filter(c -> c.getId().equals(id)).findFirst().get();
     }
+
+
 
     /*
     void addTransaction(Transaction newTransaction) {

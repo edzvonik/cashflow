@@ -96,7 +96,6 @@ class AccountTest {
                 .id(1L)
                 .title("Cash")
                 .currency("RUB")
-                .lastSubtotal(Mockito.mock(AccountSubtotal.class))
                 .categories(new ArrayList<>(List.of(category)))
                 .transactions(mock(Transaction.class))
                 .build();
@@ -111,7 +110,6 @@ class AccountTest {
                 .id(1L)
                 .title("Cash")
                 .currency("RUB")
-                .lastSubtotal(Mockito.mock(AccountSubtotal.class))
                 .categories(new ArrayList<>(List.of(category)))
                 .transactions(mock(Transaction.class))
                 .build();

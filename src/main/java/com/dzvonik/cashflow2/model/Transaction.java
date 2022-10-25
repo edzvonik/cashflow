@@ -22,10 +22,10 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Builder
-@EqualsAndHashCode(of = "id")
-@ToString(exclude = {"account", "category"})
+@ToString
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode(of = {"amount", "type", "date"})
 public class Transaction {
 
     @Id

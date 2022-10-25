@@ -26,21 +26,6 @@ create table account
             on delete cascade
 );
 
-create sequence seq_account_subtotal start with 1 increment by 50;
-
-create table account_subtotal
-(
-    id            bigint primary key not null,
-    calculated_at timestamp          not null,
-    updated_at    timestamp          not null,
-    subtotal      numeric            not null,
-    account_id    bigint             not null,
-    constraint fk_account
-        foreign key (account_id)
-            references account (id)
-            on delete cascade
-);
-
 create sequence seq_category start with 1 increment by 50;
 
 create table category
