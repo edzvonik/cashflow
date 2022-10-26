@@ -3,7 +3,6 @@ package com.dzvonik.cashflow2.model;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,8 +15,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -25,7 +26,6 @@ import java.time.LocalDate;
 @ToString
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode(of = {"amount", "type", "date"})
 public class Transaction {
 
     @Id
@@ -33,17 +33,36 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_transaction")
     private Long id;
 
+    @NotNull
     @Column(nullable = false)
     private BigDecimal amount;
 
+    @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TransactionType type;
 
+    @NotNull
     @Column(nullable = false)
     private LocalDate date;
 
     private String comment;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Transaction)) return false;
+        Transaction that = (Transaction) o;
+
+        if (amount.compareTo(that.amount) != 0) return false;
+        if (type != that.type) return false;
+        return date.toString().equals(that.date.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return amount.stripTrailingZeros().hashCode() + Objects.hash(type, date);
+    }
 
 }
 
