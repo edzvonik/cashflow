@@ -66,6 +66,56 @@ class AccountTest {
     }
 
     @Test
+    void getTransactionById_WhenCall_ThenReturnTransaction() {
+        Transaction transaction = Transaction.builder()
+                .id(5L)
+                .amount(new BigDecimal("14.1"))
+                .type(TransactionType.INCOME)
+                .date(LocalDate.of(2022, 11, 2))
+                .comment("Test comment")
+                .accountId(1L)
+                .categoryId(2L)
+                .build();
+        List<Transaction> transactions = List.of(transaction);
+        Account account = Account.builder()
+                .id(1L)
+                .transactions(transactions)
+                .categories(mock(Category.class))
+                .build();
+
+        Transaction receivedTransaction = account.getTransactionById(5L);
+
+        assertThat(receivedTransaction.getId()).isEqualTo(5L);
+        assertThat(receivedTransaction.getAmount()).isEqualTo(new BigDecimal("14.1"));
+        assertThat(receivedTransaction.getType()).isEqualTo(TransactionType.INCOME);
+        assertThat(receivedTransaction.getDate()).isEqualTo(LocalDate.of(2022, 11, 2));
+        assertThat(receivedTransaction.getComment()).isEqualTo("Test comment");
+    }
+
+    @Test
+    void getTransactionById_WhenNotExist_ThenThrowException() {
+        Transaction transaction = Transaction.builder()
+                .id(5L)
+                .amount(new BigDecimal("14.1"))
+                .type(TransactionType.INCOME)
+                .date(LocalDate.of(2022, 11, 2))
+                .comment("Test comment")
+                .accountId(1L)
+                .categoryId(2L)
+                .build();
+        List<Transaction> transactions = List.of(transaction);
+        Account account = Account.builder()
+                .id(1L)
+                .transactions(transactions)
+                .categories(mock(Category.class))
+                .build();
+
+        Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
+            account.getTransactionById(1L);
+        });
+    }
+
+    @Test
     void getTransactions_WhenAddThroughGetter_ThenReturnUnmodifiableList() {
         Account account = Account.builder()
                 .id(1L)

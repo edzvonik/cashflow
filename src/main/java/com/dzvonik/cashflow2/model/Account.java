@@ -60,6 +60,10 @@ public class Account {
     )
     private List<Transaction> transactions;
 
+    public Transaction getTransactionById(Long id) {
+        return transactions.stream().filter(t -> t.getId().equals(id)).findFirst().orElseThrow(() -> new ResourceNotFoundException("Transaction with id=" + id + " not found"));
+    }
+
     public List<Transaction> getTransactions() {
         return Collections.unmodifiableList(transactions);
     }
