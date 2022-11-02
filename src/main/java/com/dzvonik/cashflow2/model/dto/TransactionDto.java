@@ -15,6 +15,8 @@ import java.time.LocalDate;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class TransactionDto {
 
+    private final Long id;
+
     @NotNull(message = "Amount may not be null")
     private final BigDecimal amount;
 

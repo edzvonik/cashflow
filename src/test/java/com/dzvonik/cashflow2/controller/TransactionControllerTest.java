@@ -18,7 +18,9 @@ import java.time.LocalDate;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -95,6 +97,35 @@ class TransactionControllerTest {
                         jsonPath("$.errors.type").value("Type may not be null"),
                         jsonPath("$.errors.accountId").value("Account may not be null"),
                         jsonPath("$.errors.categoryId").value("Category may not be null")
+                );
+    }
+
+    @Test
+    void getById_WhenCall_ThenReturnTransaction() throws Exception {
+        TransactionDto dto = TransactionDto.builder()
+                .id(22L)
+                .amount(new BigDecimal("55512125.51"))
+                .type(TransactionType.EXPENSE)
+                .date(LocalDate.of(2022, 11, 2))
+                .comment("Get transaction test")
+                .accountId(5L)
+                .categoryId(3L)
+                .build();
+
+        when(transactionService.getById(22L)).thenReturn(dto);
+
+        mockMvc.perform(get("/transaction/22")
+                .contentType("application/json"))
+                .andExpectAll(
+                        status().isOk(),
+                        header().string("Cache-control", "no-store, no-cache, must-revalidate"),
+                        jsonPath("$.transaction.id").value(22),
+                        jsonPath("$.transaction.amount").value(55512125.51),
+                        jsonPath("$.transaction.type").value("EXPENSE"),
+                        jsonPath("$.transaction.date").value("2022-11-02"),
+                        jsonPath("$.transaction.comment").value("Get transaction test"),
+                        jsonPath("$.transaction.accountId").value(5),
+                        jsonPath("$.transaction.categoryId").value(3)
                 );
     }
 

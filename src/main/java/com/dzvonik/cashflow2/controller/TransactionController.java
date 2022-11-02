@@ -6,6 +6,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +33,19 @@ public class TransactionController {
         Map<String, Object> body = new HashMap<>();
         body.put("path", "/transaction/" + transactionId);
         return new ResponseEntity<>(body, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getById(@PathVariable Long id) {
+        TransactionDto transactionDto = transactionService.getById(id);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("transaction", transactionDto);
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Cache-control", "no-store, no-cache, must-revalidate");
+
+        return new ResponseEntity<>(body, headers, HttpStatus.OK);
     }
 
 }

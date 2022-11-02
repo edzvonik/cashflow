@@ -30,6 +30,11 @@ public class DefaultTransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public TransactionDto getById(Long id) {
+        return null;
+    }
+
+    @Override
     public Transaction dtoToEntity(TransactionDto dto) {
         return Transaction.builder()
                 .accountId(dto.getAccountId())
