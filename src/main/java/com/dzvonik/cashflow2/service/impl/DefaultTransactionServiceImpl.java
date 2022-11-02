@@ -30,10 +30,12 @@ public class DefaultTransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public TransactionDto getById(Long id, Long accountId) {
-        // 1. Получить все счета для юзера
-        // 2. Искать транзакцию во всех счетах
-        return null;
+        Account account = accountRepository.findById(accountId).orElseThrow(
+                () -> new ResourceNotFoundException("Account with " + accountId + " not found")
+        );
+        return entityToDto(account.getTransactionById(id));
     }
 
     @Override
@@ -48,4 +50,16 @@ public class DefaultTransactionServiceImpl implements TransactionService {
                 .build();
     }
 
+    @Override
+    public TransactionDto entityToDto(Transaction transaction) {
+        return TransactionDto.builder()
+                .id(transaction.getId())
+                .amount(transaction.getAmount())
+                .type(transaction.getType())
+                .date(transaction.getDate())
+                .comment(transaction.getComment())
+                .accountId(transaction.getAccountId())
+                .categoryId(transaction.getCategoryId())
+                .build();
+    }
 }
