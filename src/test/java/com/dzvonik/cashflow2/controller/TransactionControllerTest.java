@@ -112,9 +112,9 @@ class TransactionControllerTest {
                 .categoryId(3L)
                 .build();
 
-        when(transactionService.getById(22L)).thenReturn(dto);
+        when(transactionService.getById(22L, 5L)).thenReturn(dto);
 
-        mockMvc.perform(get("/transaction/22")
+        mockMvc.perform(get("/transaction/22?accountId=5")
                 .contentType("application/json"))
                 .andExpectAll(
                         status().isOk(),

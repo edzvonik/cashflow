@@ -30,7 +30,9 @@ public class DefaultTransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionDto getById(Long id) {
+    public TransactionDto getById(Long id, Long accountId) {
+        // 1. Получить все счета для юзера
+        // 2. Искать транзакцию во всех счетах
         return null;
     }
 

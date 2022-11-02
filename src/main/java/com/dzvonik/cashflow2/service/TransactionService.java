@@ -7,7 +7,7 @@ public interface TransactionService {
 
     Long create(TransactionDto dto);
 
-    TransactionDto getById(Long id);
+    TransactionDto getById(Long id, Long accountId);
 
     Transaction dtoToEntity(TransactionDto dto);
 
