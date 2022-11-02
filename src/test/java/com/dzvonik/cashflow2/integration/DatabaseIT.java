@@ -1,6 +1,6 @@
 package com.dzvonik.cashflow2.integration;
 
-import com.dzvonik.cashflow2.initializer.Postgres;
+import com.dzvonik.cashflow2.integration.initializer.Postgres;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;

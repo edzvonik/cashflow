@@ -4,26 +4,24 @@ import com.dzvonik.cashflow2.model.Transaction;
 import com.dzvonik.cashflow2.model.TransactionType;
 import com.dzvonik.cashflow2.model.dto.TransactionDto;
 import com.dzvonik.cashflow2.repository.AccountRepository;
-import com.dzvonik.cashflow2.service.impl.TransactionServiceImpl;
+import com.dzvonik.cashflow2.service.impl.DefaultTransactionServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class)
-class TransactionServiceImplTest {
+@ExtendWith(SpringExtension.class)
+class DefaultTransactionServiceImplTest {
 
-    @Mock
+    @MockBean
     private AccountRepository accountRepository;
 
-    @InjectMocks
-    private TransactionServiceImpl transactionService;
+    private TransactionService transactionService = new DefaultTransactionServiceImpl(accountRepository);
 
     @Test
     void dtoToEntity() {
@@ -43,4 +41,5 @@ class TransactionServiceImplTest {
         assertThat(transactionFromDto.getDate()).isEqualTo(LocalDate.of(2022, 10, 25));
         assertThat(transactionFromDto.getComment()).isEqualTo("Test dto");
     }
+
 }

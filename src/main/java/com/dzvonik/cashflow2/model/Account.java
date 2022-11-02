@@ -1,5 +1,6 @@
 package com.dzvonik.cashflow2.model;
 
+import com.dzvonik.cashflow2.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +8,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.JoinFormula;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,11 +19,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 @Entity
@@ -32,7 +30,7 @@ import java.util.List;
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@ToString(exclude = {"categories", "transactions", "subtotals"})
+@ToString(exclude = {"categories", "transactions"})
 public class Account {
 
     @Id
@@ -53,12 +51,6 @@ public class Account {
             inverseJoinColumns = @JoinColumn(name = "category_id")
     )
     private List<Category> categories;
-    /*
-    Счета приходят только с теми категориями, которые используются в транзакциях
-    Но если я хочу использовать категорию, которой нет в счете?
-    Все категории будут выводиться по счетам - findAllByAccountIds только уникальные
-    Когда добавляешь транзакцию - будут видны все категории
-     */
 
     @JoinColumn(name = "account_id")
     @OneToMany(
@@ -78,35 +70,7 @@ public class Account {
     }
 
     public Category getCategoryById(Long id) {
-        return categories.stream().filter(c -> c.getId().equals(id)).findFirst().get();
+        return categories.stream().filter(c -> c.getId().equals(id)).findFirst().orElseThrow(() -> new ResourceNotFoundException("Category with id=" + id + " not found"));
     }
-
-
-
-    /*
-    void addTransaction(Transaction newTransaction) {
-        0. getAccountByUserIdAndId(c категориями) - Получить счета по user_id, user_id через UserService.getLoggedUser
-        1. dtoToEntity (сервис) с подключением account и category
-        2. account.addTransaction(newTransactionEntity) - добавляет в account.transactions и category.transactions
-        3. accountRepo.save(account);
-        // 1. сохранить в transactions
-        // 2. сохранить в category->transactions
-        getCategoryById(newTransaction.getCategory()).addTransaction(new
-    }
-
-
-    */
-
-
-    // calculateIncomes
-    // calculateExpenses
-    // calculateTransactions
-    // calculateTransactionsByCategory
-
-    // Работа с subtotal
-    // addTransaction(Long categoryId, Transaction t)
-    // editTransaction(Long categoryId, Transaction newT)
-    // removeTransaction(Long transactionId)
-
 
 }

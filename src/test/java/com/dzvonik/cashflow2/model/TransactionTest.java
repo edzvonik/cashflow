@@ -1,6 +1,7 @@
 package com.dzvonik.cashflow2.model;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -54,7 +55,7 @@ class TransactionTest {
     @Test
     void equalsAndHashCode() {
         EqualsVerifier.forClass(Transaction.class)
-                .withIgnoredFields("comment")
+                .suppress(Warning.SURROGATE_KEY)
                 .verify();
     }
 

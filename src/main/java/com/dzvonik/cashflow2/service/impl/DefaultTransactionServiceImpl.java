@@ -1,5 +1,6 @@
 package com.dzvonik.cashflow2.service.impl;
 
+import com.dzvonik.cashflow2.exception.ResourceNotFoundException;
 import com.dzvonik.cashflow2.model.Account;
 import com.dzvonik.cashflow2.model.Transaction;
 import com.dzvonik.cashflow2.model.dto.TransactionDto;
@@ -10,22 +11,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-@Service
 @AllArgsConstructor
-public class TransactionServiceImpl implements TransactionService {
+@Service("defaultTransactionService")
+public class DefaultTransactionServiceImpl implements TransactionService {
 
     private final AccountRepository accountRepository;
 
     @Override
     @Transactional
-    public void addTransaction(TransactionDto dto) {
-        Account account = accountRepository.findById(dto.getAccountId()).get();
-        account.addTransaction(dtoToEntity(dto), dto.getCategoryId());
+    public Long create(TransactionDto dto) {
+        Transaction transaction = dtoToEntity(dto);
+        Account account = accountRepository
+                .findById(dto.getAccountId())
+                .orElseThrow(() -> new ResourceNotFoundException("Account with " + dto.getAccountId() + " not found"));
+        account.addTransaction(transaction, dto.getCategoryId());
+        accountRepository.flush();
+        return transaction.getId();
     }
 
     @Override
     public Transaction dtoToEntity(TransactionDto dto) {
         return Transaction.builder()
+                .accountId(dto.getAccountId())
+                .categoryId(dto.getCategoryId())
                 .amount(dto.getAmount())
                 .type(dto.getType())
                 .date(dto.getDate())

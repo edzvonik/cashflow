@@ -1,5 +1,6 @@
 package com.dzvonik.cashflow2.model;
 
+import com.dzvonik.cashflow2.exception.ResourceNotFoundException;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.Test;
@@ -51,32 +52,21 @@ class AccountTest {
                 .build();
 
         assertThat(accountWithData.toString()).contains(
-            "id=0",
-            "title=Card",
-            "currency=RUB",
-            "balance=0.00"
+                "id=0",
+                "title=Card",
+                "currency=RUB"
         );
     }
 
     @Test
     void equalsAndHashCode() {
-        Transaction transaction1 = Mockito.mock(Transaction.class);
-        Transaction transaction2 = Mockito.mock(Transaction.class);
-        Account account1 = Mockito.mock(Account.class);
-        Account account2 = Mockito.mock(Account.class);
-        Category category1 = Mockito.mock(Category.class);
-        Category category2 = Mockito.mock(Category.class);
-
         EqualsVerifier.forClass(User.class)
-                .withPrefabValues(Transaction.class, transaction1, transaction2)
-                .withPrefabValues(Account.class, account1, account2)
-                .withPrefabValues(Category.class, category1, category2)
                 .suppress(Warning.SURROGATE_KEY)
                 .verify();
     }
 
     @Test
-    void getTransactions_WhenAddThroughGetter_ThenThrowException() {
+    void getTransactions_WhenAddThroughGetter_ThenReturnUnmodifiableList() {
         Account account = Account.builder()
                 .id(1L)
                 .title("Cash")
@@ -86,6 +76,21 @@ class AccountTest {
 
         Exception exception = assertThrows(UnsupportedOperationException.class, () -> {
             account.getTransactions().add(Mockito.mock(Transaction.class));
+        });
+    }
+
+    @Test
+    void getCategoryById_WhenNotExist_ThenResourceNotFoundException() {
+        Account account = Account.builder()
+                .id(1L)
+                .title("Cash")
+                .currency("RUB")
+                .categories(mock(Category.class))
+                .transactions(mock(Transaction.class))
+                .build();
+
+        RuntimeException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            account.getCategoryById(5L);
         });
     }
 

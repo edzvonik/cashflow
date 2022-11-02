@@ -33,8 +33,8 @@ class CategoryTest {
         Category categoryWithData = new Category(0L, "Home", mock());
 
         assertThat(categoryWithData.toString()).contains(
-            "id=0",
-            "title=Home"
+                "id=0",
+                "title=Home"
         );
     }
 

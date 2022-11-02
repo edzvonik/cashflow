@@ -1,4 +1,4 @@
-package com.dzvonik.cashflow2.initializer;
+package com.dzvonik.cashflow2.integration.initializer;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.boot.test.util.TestPropertyValues;
