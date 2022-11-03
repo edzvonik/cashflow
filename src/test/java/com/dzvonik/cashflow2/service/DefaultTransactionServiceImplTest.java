@@ -48,7 +48,7 @@ class DefaultTransactionServiceImplTest {
     }
 
     @Test
-    void create() throws Exception {
+    void create_WhenCreate_ThenReturnTransactionId() throws Exception {
         TransactionDto dto = TransactionDto.builder()
                 .amount(new BigDecimal("43235.12"))
                 .type(TransactionType.INCOME)
@@ -73,7 +73,7 @@ class DefaultTransactionServiceImplTest {
             return null;
         });
         Long transactionId = transactionService.create(dto);
-        
+
         assertThat(transactionId).isNotNull();
         verify(accountRepository).findById(account.getId());
         verify(accountRepository).saveAndFlush(account);
