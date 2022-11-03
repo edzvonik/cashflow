@@ -20,7 +20,7 @@ class CategoryTest {
 
     @Test
     void constructor_WhenSetValues_ThenReturnValues() {
-        List<Transaction> transactions = mock();
+        List<Transaction> transactions = mockList();
         Category categoryWithData = new Category(3L, "Home", transactions);
 
         assertThat(categoryWithData.getId()).isEqualTo(3L);
@@ -30,7 +30,7 @@ class CategoryTest {
 
     @Test
     void toString_WhenCall_ThenReturnStringRepresentation() {
-        Category categoryWithData = new Category(0L, "Home", mock());
+        Category categoryWithData = new Category(0L, "Home", mockList());
 
         assertThat(categoryWithData.toString()).contains(
                 "id=0",
@@ -55,7 +55,7 @@ class CategoryTest {
                 .verify();
     }
 
-    private List<Transaction> mock() {
+    private List<Transaction> mockList() {
         return List.of(org.mockito.Mockito.mock(Transaction.class));
     }
 

@@ -25,8 +25,8 @@ class AccountTest {
 
     @Test
     void builder_WhenSetValues_ThenReturnValues() {
-        List<Transaction> transactions = mock(Transaction.class);
-        List<Category> categories = mock(Category.class);
+        List<Transaction> transactions = mockList(Transaction.class);
+        List<Category> categories = mockList(Category.class);
 
         Account accountWithData = Account.builder()
                 .id(5L)
@@ -80,7 +80,7 @@ class AccountTest {
         Account account = Account.builder()
                 .id(1L)
                 .transactions(transactions)
-                .categories(mock(Category.class))
+                .categories(mockList(Category.class))
                 .build();
 
         Transaction receivedTransaction = account.getTransactionById(5L);
@@ -107,7 +107,7 @@ class AccountTest {
         Account account = Account.builder()
                 .id(1L)
                 .transactions(transactions)
-                .categories(mock(Category.class))
+                .categories(mockList(Category.class))
                 .build();
 
         Exception exception = assertThrows(ResourceNotFoundException.class, () -> {
@@ -120,8 +120,8 @@ class AccountTest {
         Account account = Account.builder()
                 .id(1L)
                 .title("Cash")
-                .transactions(new ArrayList<>(mock(Transaction.class)))
-                .categories(new ArrayList<>(mock(Category.class)))
+                .transactions(new ArrayList<>(mockList(Transaction.class)))
+                .categories(new ArrayList<>(mockList(Category.class)))
                 .build();
 
         Exception exception = assertThrows(UnsupportedOperationException.class, () -> {
@@ -135,8 +135,8 @@ class AccountTest {
                 .id(1L)
                 .title("Cash")
                 .currency("RUB")
-                .categories(mock(Category.class))
-                .transactions(mock(Transaction.class))
+                .categories(mockList(Category.class))
+                .transactions(mockList(Transaction.class))
                 .build();
 
         RuntimeException exception = assertThrows(ResourceNotFoundException.class, () -> {
@@ -146,13 +146,13 @@ class AccountTest {
 
     @Test
     void getCategoryById_WhenCall_ThenReturnCategory() {
-        Category category = new Category(1L, "Test_Category", mock(Transaction.class));
+        Category category = new Category(1L, "Test_Category", mockList(Transaction.class));
         Account account = Account.builder()
                 .id(1L)
                 .title("Cash")
                 .currency("RUB")
                 .categories(new ArrayList<>(List.of(category)))
-                .transactions(mock(Transaction.class))
+                .transactions(mockList(Transaction.class))
                 .build();
 
         assertThat(account.getCategoryById(1L).getTitle()).isEqualTo("Test_Category");
@@ -160,13 +160,13 @@ class AccountTest {
 
     @Test
     void addTransaction_WhenCall_ThenAddTransactionToTransactionAndCategory() {
-        Category category = new Category(1L, "Test_Category", mock(Transaction.class));
+        Category category = new Category(1L, "Test_Category", mockList(Transaction.class));
         Account account = Account.builder()
                 .id(1L)
                 .title("Cash")
                 .currency("RUB")
                 .categories(new ArrayList<>(List.of(category)))
-                .transactions(mock(Transaction.class))
+                .transactions(mockList(Transaction.class))
                 .build();
 
         Transaction transaction = Transaction.builder()
@@ -183,7 +183,7 @@ class AccountTest {
         assertThat(account.getCategoryById(category.getId()).getTransactions().contains(transaction)).isTrue();
     }
 
-    private <T> List<T> mock(Class<T> c) {
+    private <T> List<T> mockList(Class<T> c) {
         return new ArrayList<>(List.of(org.mockito.Mockito.mock(c)));
     }
 

@@ -20,7 +20,7 @@ class UserTest {
 
     @Test
     void builder_WhenSetValues_ThenReturnValues() {
-        List<Account> accounts = mock();
+        List<Account> accounts = mockList();
         User userWithData = User.builder()
                 .id(7L)
                 .name("Test1")
@@ -69,7 +69,7 @@ class UserTest {
                 .verify();
     }
 
-    private List<Account> mock() {
+    private List<Account> mockList() {
         return List.of(org.mockito.Mockito.mock(Account.class));
     }
 
