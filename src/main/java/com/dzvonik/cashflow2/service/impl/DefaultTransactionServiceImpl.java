@@ -25,7 +25,7 @@ public class DefaultTransactionServiceImpl implements TransactionService {
                 .findById(dto.getAccountId())
                 .orElseThrow(() -> new ResourceNotFoundException("Account with " + dto.getAccountId() + " not found"));
         account.addTransaction(transaction, dto.getCategoryId());
-        accountRepository.flush();
+        accountRepository.saveAndFlush(account);
         return transaction.getId();
     }
 
