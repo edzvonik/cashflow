@@ -4,6 +4,10 @@ import com.dzvonik.cashflow2.model.dto.TransactionDto;
 import com.dzvonik.cashflow2.service.TransactionService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
@@ -42,6 +46,21 @@ public class TransactionController {
 
         Map<String, Object> body = new HashMap<>();
         body.put("transaction", transactionDto);
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Cache-control", "no-store, no-cache, must-revalidate");
+
+        return new ResponseEntity<>(body, headers, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> getAll(@SortDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<TransactionDto> transactionsDto = transactionService.getAll(pageable);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("transactions", transactionsDto.getContent());
+        body.put("totalPages", transactionsDto.getTotalPages());
+        body.put("totalElements", transactionsDto.getTotalElements());
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
         headers.add("Cache-control", "no-store, no-cache, must-revalidate");

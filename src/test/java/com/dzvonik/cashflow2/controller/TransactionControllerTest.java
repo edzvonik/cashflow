@@ -10,12 +10,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -127,6 +135,40 @@ class TransactionControllerTest {
                         jsonPath("$.transaction.accountId").value(5),
                         jsonPath("$.transaction.categoryId").value(3)
                 );
+    }
+
+    @Test
+    void getAll_WhenCall_ThenReturnPageWithDto() throws Exception {
+        TransactionDto dto = TransactionDto.builder()
+                .id(22L)
+                .amount(new BigDecimal("55512125.51"))
+                .type(TransactionType.EXPENSE)
+                .date(LocalDate.of(2022, 11, 2))
+                .comment("Get transaction test")
+                .accountId(5L)
+                .categoryId(3L)
+                .build();
+        String jsonDto = mapper.writeValueAsString(dto);
+        List<TransactionDto> content = new ArrayList<>(List.of(dto));
+        Pageable pageable = PageRequest.of(0, 3);
+        Page<TransactionDto> pageDto = new PageImpl<>(content, pageable, 1);
+
+
+        when(transactionService.getAll(any())).thenReturn(pageDto);
+
+        MvcResult result = mockMvc.perform(get("/transaction?page=0&size=3")
+                .contentType("application/json"))
+                .andExpectAll(
+                        status().isOk(),
+                        header().string("Cache-control", "no-store, no-cache, must-revalidate")
+                )
+                .andReturn();
+        String resultJson = result.getResponse().getContentAsString();
+        assertThat(resultJson).contains(
+                "\"totalPages\":1",
+                "\"totalElements\":1",
+                jsonDto
+        );
     }
 
 }

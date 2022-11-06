@@ -5,8 +5,11 @@ import com.dzvonik.cashflow2.model.Account;
 import com.dzvonik.cashflow2.model.Transaction;
 import com.dzvonik.cashflow2.model.dto.TransactionDto;
 import com.dzvonik.cashflow2.repository.AccountRepository;
+import com.dzvonik.cashflow2.repository.TransactionRepository;
 import com.dzvonik.cashflow2.service.TransactionService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DefaultTransactionServiceImpl implements TransactionService {
 
     private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
     @Override
     @Transactional
@@ -36,6 +40,12 @@ public class DefaultTransactionServiceImpl implements TransactionService {
                 () -> new ResourceNotFoundException("Account with " + accountId + " not found")
         );
         return entityToDto(account.getTransactionById(id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<TransactionDto> getAll(Pageable pageable) {
+        return null;
     }
 
     @Override
