@@ -46,7 +46,6 @@ class DefaultTransactionServiceImplTest {
     @Mock
     private TransactionRepository transactionRepository;
 
-    // @Spy
     private TransactionService transactionService;
 
     @BeforeEach
@@ -107,12 +106,7 @@ class DefaultTransactionServiceImplTest {
         when(accountRepository.findById(1L)).thenReturn(Optional.ofNullable(account));
         TransactionDto dto = transactionService.getById(57L, 1L);
 
-        assertThat(dto.getAmount()).isEqualTo(new BigDecimal("43235.12"));
-        assertThat(dto.getType()).isEqualTo(TransactionType.INCOME);
-        assertThat(dto.getDate()).isEqualTo(LocalDate.of(2021, 9, 5));
-        assertThat(dto.getComment()).isEqualTo("Income test transaction");
-        assertThat(dto.getAccountId()).isEqualTo(1L);
-        assertThat(dto.getCategoryId()).isEqualTo(2L);
+        assertThat(dto).usingRecursiveComparison().isEqualTo(transaction);
     }
 
     @Test
@@ -149,12 +143,9 @@ class DefaultTransactionServiceImplTest {
                 .categoryId(3L)
                 .build();
 
-        Transaction transactionFromDto = transactionService.dtoToEntity(dto);
+        Transaction transaction = transactionService.dtoToEntity(dto);
 
-        assertThat(transactionFromDto.getAmount()).isEqualTo(new BigDecimal("1032.52"));
-        assertThat(transactionFromDto.getType()).isEqualTo(TransactionType.INCOME);
-        assertThat(transactionFromDto.getDate()).isEqualTo(LocalDate.of(2022, 10, 25));
-        assertThat(transactionFromDto.getComment()).isEqualTo("Test dto");
+        assertThat(transaction).usingRecursiveComparison().isEqualTo(dto);
     }
 
     @Test
@@ -169,13 +160,9 @@ class DefaultTransactionServiceImplTest {
                 .categoryId(2L)
                 .build();
 
-        TransactionDto dtoFromTransaction = transactionService.entityToDto(transaction);
-        assertThat(dtoFromTransaction.getAmount()).isEqualTo(new BigDecimal("1.03"));
-        assertThat(dtoFromTransaction.getType()).isEqualTo(TransactionType.EXPENSE);
-        assertThat(dtoFromTransaction.getDate()).isEqualTo(LocalDate.of(2021, 9, 5));
-        assertThat(dtoFromTransaction.getComment()).isEqualTo("Expense transaction");
-        assertThat(dtoFromTransaction.getAccountId()).isEqualTo(1L);
-        assertThat(dtoFromTransaction.getCategoryId()).isEqualTo(2L);
+        TransactionDto dto = transactionService.entityToDto(transaction);
+
+        assertThat(dto).usingRecursiveComparison().isEqualTo(transaction);
     }
 
 }
