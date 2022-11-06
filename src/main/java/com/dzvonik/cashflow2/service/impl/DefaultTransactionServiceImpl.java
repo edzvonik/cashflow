@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @AllArgsConstructor
 @Service("defaultTransactionService")
 public class DefaultTransactionServiceImpl implements TransactionService {
@@ -45,7 +44,8 @@ public class DefaultTransactionServiceImpl implements TransactionService {
     @Override
     @Transactional(readOnly = true)
     public Page<TransactionDto> getAll(Pageable pageable) {
-        return null;
+        Page<Transaction> transactionPage = transactionRepository.findAll(pageable);
+        return transactionPage.map(this::entityToDto);
     }
 
     @Override

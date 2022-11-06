@@ -6,6 +6,7 @@ import com.dzvonik.cashflow2.model.Transaction;
 import com.dzvonik.cashflow2.model.TransactionType;
 import com.dzvonik.cashflow2.model.dto.TransactionDto;
 import com.dzvonik.cashflow2.repository.AccountRepository;
+import com.dzvonik.cashflow2.repository.TransactionRepository;
 import com.dzvonik.cashflow2.service.impl.DefaultTransactionServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Field;
@@ -38,13 +43,16 @@ class DefaultTransactionServiceImplTest {
     @Mock
     private AccountRepository accountRepository;
 
+    @Mock
+    private TransactionRepository transactionRepository;
+
     // @Spy
     private TransactionService transactionService;
 
     @BeforeEach
     void init() {
         MockitoAnnotations.openMocks(this);
-        transactionService = Mockito.spy(new DefaultTransactionServiceImpl(accountRepository));
+        transactionService = Mockito.spy(new DefaultTransactionServiceImpl(accountRepository, transactionRepository));
     }
 
     @Test
@@ -105,6 +113,29 @@ class DefaultTransactionServiceImplTest {
         assertThat(dto.getComment()).isEqualTo("Income test transaction");
         assertThat(dto.getAccountId()).isEqualTo(1L);
         assertThat(dto.getCategoryId()).isEqualTo(2L);
+    }
+
+    @Test
+    void getAll_WhenCall_ThenReturnTransactionDtoPage() {
+        Transaction transaction = Transaction.builder()
+                .id(2L)
+                .amount(new BigDecimal("55125.51"))
+                .type(TransactionType.INCOME)
+                .date(LocalDate.of(2021, 10, 3))
+                .comment("Get transaction test")
+                .accountId(7L)
+                .categoryId(11L)
+                .build();
+        List<Transaction> content = new ArrayList<>(List.of(transaction));
+        Pageable pageable = PageRequest.of(0, 3);
+        Page<Transaction> transactionPage = new PageImpl<>(content, pageable, 1);
+
+        when(transactionRepository.findAll(pageable)).thenReturn(transactionPage);
+        Page<TransactionDto> transactionDtoPage = transactionService.getAll(pageable);
+        TransactionDto dtoFromPage = transactionDtoPage.getContent().get(0);
+
+        assertThat(transactionDtoPage).usingRecursiveComparison().isEqualTo(transactionPage);
+        assertThat(dtoFromPage).usingRecursiveComparison().isEqualTo(transaction);
     }
 
     @Test
