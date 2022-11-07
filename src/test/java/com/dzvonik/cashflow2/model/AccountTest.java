@@ -183,6 +183,45 @@ class AccountTest {
         assertThat(account.getCategoryById(category.getId()).getTransactions().contains(transaction)).isTrue();
     }
 
+    @Test
+    void removeTransactionById_WhenExist_ThenReturnTrue() {
+        Transaction transaction = Transaction.builder()
+                .id(5L)
+                .amount(new BigDecimal("33.22"))
+                .type(TransactionType.INCOME)
+                .date(LocalDate.of(2022, 11, 4))
+                .comment("Remove transaction test")
+                .accountId(5L)
+                .categoryId(3L)
+                .build();
+        List<Transaction> transactions = new ArrayList<>(List.of(transaction));
+        Category testCategory = new Category(3L, "Home", transactions);
+        List<Category> categories = new ArrayList<>(List.of(testCategory));
+        Account testAccount = Account.builder()
+                .id(5L)
+                .categories(categories)
+                .transactions(transactions)
+                .build();
+
+        assertThat(testAccount.getTransactions()).doesNotContain(transaction);
+        assertThat(testAccount.getCategoryById(3L).getTransactions()).doesNotContain(transaction);
+    }
+
+    @Test
+    void removeTransactionById_WhenNotExist_ThenThrowsResourceNotFound() {
+        List<Transaction> transactions = new ArrayList<>(List.of());
+        List<Category> categories = new ArrayList<>(List.of());
+        Account testAccount = Account.builder()
+                .id(5L)
+                .categories(categories)
+                .transactions(transactions)
+                .build();
+
+        RuntimeException exception = assertThrows(ResourceNotFoundException.class, () -> {
+            testAccount.removeTransactionById(5L, 3L);
+        });
+    }
+
     private <T> List<T> mockList(Class<T> c) {
         return new ArrayList<>(List.of(org.mockito.Mockito.mock(c)));
     }

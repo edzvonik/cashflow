@@ -1,5 +1,6 @@
 package com.dzvonik.cashflow2.model;
 
+import com.dzvonik.cashflow2.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -51,6 +52,18 @@ public class Category {
 
     public void addTransaction(Transaction newTransaction) {
         transactions.add(newTransaction);
+    }
+
+    public void removeTransactionById(Long id) {
+        Transaction transaction = getTransactionById(id);
+        transactions.remove(transaction);
+    }
+
+    public Transaction getTransactionById(Long id) {
+        return transactions.stream()
+                .filter(t -> t.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction with id:" + id + " not found"));
     }
 
 }

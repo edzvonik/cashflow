@@ -1,6 +1,7 @@
 package com.dzvonik.cashflow2.model;
 
 import com.dzvonik.cashflow2.exception.ResourceNotFoundException;
+import liquibase.pro.packaged.E;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -71,6 +72,12 @@ public class Account {
     public void addTransaction(Transaction newTransaction, Long categoryId) {
         transactions.add(newTransaction);
         getCategoryById(categoryId).addTransaction(newTransaction);
+    }
+
+    public void removeTransactionById(Long id, Long categoryId) {
+        Transaction transaction = getTransactionById(id);
+        transactions.remove(transaction);
+        getCategoryById(categoryId).removeTransactionById(id);
     }
 
     public Category getCategoryById(Long id) {
