@@ -1,7 +1,6 @@
 package com.dzvonik.cashflow2.model;
 
 import com.dzvonik.cashflow2.exception.ResourceNotFoundException;
-import liquibase.pro.packaged.E;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -74,14 +73,18 @@ public class Account {
         getCategoryById(categoryId).addTransaction(newTransaction);
     }
 
-    public void removeTransactionById(Long id, Long categoryId) {
+    public boolean deleteTransactionById(Long id, Long categoryId) {
         Transaction transaction = getTransactionById(id);
-        transactions.remove(transaction);
-        getCategoryById(categoryId).removeTransactionById(id);
+        boolean isDeletedFromAccount = transactions.remove(transaction);
+        boolean fromCategory = getCategoryById(categoryId).deleteTransactionById(id);
+        return isDeletedFromAccount && fromCategory;
     }
 
     public Category getCategoryById(Long id) {
-        return categories.stream().filter(c -> c.getId().equals(id)).findFirst().orElseThrow(() -> new ResourceNotFoundException("Category with id=" + id + " not found"));
+        return categories.stream()
+                .filter(c -> c.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Category with id=" + id + " not found"));
     }
 
 }

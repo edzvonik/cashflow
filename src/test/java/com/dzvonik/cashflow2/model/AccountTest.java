@@ -184,9 +184,9 @@ class AccountTest {
     }
 
     @Test
-    void removeTransactionById_WhenExist_ThenReturnTrue() {
+    void deleteTransactionById_WhenExist_ThenReturnTrue() {
         Transaction transaction = Transaction.builder()
-                .id(5L)
+                .id(4L)
                 .amount(new BigDecimal("33.22"))
                 .type(TransactionType.INCOME)
                 .date(LocalDate.of(2022, 11, 4))
@@ -194,21 +194,23 @@ class AccountTest {
                 .accountId(5L)
                 .categoryId(3L)
                 .build();
-        List<Transaction> transactions = new ArrayList<>(List.of(transaction));
-        Category testCategory = new Category(3L, "Home", transactions);
+        Category testCategory = new Category(3L, "Home", new ArrayList<>(List.of(transaction)));
         List<Category> categories = new ArrayList<>(List.of(testCategory));
         Account testAccount = Account.builder()
                 .id(5L)
                 .categories(categories)
-                .transactions(transactions)
+                .transactions(new ArrayList<>(List.of(transaction)))
                 .build();
 
+        boolean isDeleted = testAccount.deleteTransactionById(4L, 3L);
+
+        assertThat(isDeleted).isTrue();
         assertThat(testAccount.getTransactions()).doesNotContain(transaction);
         assertThat(testAccount.getCategoryById(3L).getTransactions()).doesNotContain(transaction);
     }
 
     @Test
-    void removeTransactionById_WhenNotExist_ThenThrowsResourceNotFound() {
+    void deleteTransactionById_WhenNotExist_ThenThrowsResourceNotFound() {
         List<Transaction> transactions = new ArrayList<>(List.of());
         List<Category> categories = new ArrayList<>(List.of());
         Account testAccount = Account.builder()
@@ -218,7 +220,7 @@ class AccountTest {
                 .build();
 
         RuntimeException exception = assertThrows(ResourceNotFoundException.class, () -> {
-            testAccount.removeTransactionById(5L, 3L);
+            testAccount.deleteTransactionById(5L, 3L);
         });
     }
 

@@ -25,11 +25,16 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -169,6 +174,37 @@ class TransactionControllerTest {
                 "\"totalElements\":1",
                 jsonDto
         );
+    }
+
+    @Test
+    void deleteById_WhenExist_ThenReturnNoContentStatus() throws Exception {
+        when(transactionService.deleteById(any(), any(), any())).thenReturn(true);
+
+        mockMvc.perform(delete("/transaction/1?accountId=1&categoryId=2")
+                .contentType("application/json"))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deleteById_WhenBadRequest_ThenReturnBadRequestStatus() throws Exception {
+        when(transactionService.deleteById(any(), any(), any())).thenReturn(false);
+
+        mockMvc.perform(delete("/transaction/1")
+                .contentType("application/json"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deleteById_WhenNotExist_ThenReturnResourceNotFound() throws Exception {
+        when(transactionService.deleteById(any(), any(), any())).thenThrow(new ResourceNotFoundException("Transaction with id=5 not found"));
+
+        mockMvc.perform(delete("/transaction/5")
+                .contentType("application/json"))
+                .andExpectAll(
+                        status().isNotFound(),
+                        jsonPath("$.message").value("Transaction with id=5 not found"),
+                        jsonPath("$.uri").value("/transaction/5")
+                );
     }
 
 }

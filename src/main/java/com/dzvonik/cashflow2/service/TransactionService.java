@@ -12,6 +12,7 @@ public interface TransactionService {
     Long create(TransactionDto dto);
     TransactionDto getById(Long id, Long accountId);
     Page<TransactionDto> getAll(Pageable pageable);
+    boolean deleteById(Long id, Long accountId, Long categoryId);
     Transaction dtoToEntity(TransactionDto dto);
     TransactionDto entityToDto(Transaction transaction);
 

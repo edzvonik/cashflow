@@ -88,11 +88,11 @@ class CategoryTest {
         RuntimeException exception = assertThrows(ResourceNotFoundException.class, () -> {
             testCategory.getTransactionById(5L);
         });
-        assertThat(exception.getMessage()).isEqualTo("Transaction with id:5 not found");
+        assertThat(exception.getMessage()).isEqualTo("Transaction with id=5 not found");
     }
 
     @Test
-    void removeTransaction_WhenExist_ThenRemoveFromTransacitons() {
+    void deleteTransaction_WhenExist_ThenReturnTrue() {
         Transaction transaction = Transaction.builder()
                 .id(5L)
                 .amount(new BigDecimal("33.22"))
@@ -105,11 +105,14 @@ class CategoryTest {
         List<Transaction> transactions = new ArrayList<>(List.of(transaction));
         Category testCategory = new Category(3L, "Home", transactions);
 
+        boolean isDeleted = testCategory.deleteTransactionById(5L);
+
+        assertThat(isDeleted).isTrue();
         assertThat(testCategory.getTransactions()).doesNotContain(transaction);
     }
 
     @Test
-    void removeTransaction_WhenNotExist_ThenThrowsResourceNotFound() {
+    void deleteTransaction_WhenNotExist_ThenThrowsResourceNotFound() {
         List<Transaction> transactions = new ArrayList<>();
         Category testCategory = new Category(3L, "Home", transactions);
 

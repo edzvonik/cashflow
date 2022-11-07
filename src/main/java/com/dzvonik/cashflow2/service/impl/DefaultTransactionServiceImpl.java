@@ -36,7 +36,7 @@ public class DefaultTransactionServiceImpl implements TransactionService {
     @Transactional(readOnly = true)
     public TransactionDto getById(Long id, Long accountId) {
         Account account = accountRepository.findById(accountId).orElseThrow(
-                () -> new ResourceNotFoundException("Account with " + accountId + " not found")
+                () -> new ResourceNotFoundException("Account with id=" + accountId + " not found")
         );
         return entityToDto(account.getTransactionById(id));
     }
@@ -46,6 +46,15 @@ public class DefaultTransactionServiceImpl implements TransactionService {
     public Page<TransactionDto> getAll(Pageable pageable) {
         Page<Transaction> transactionPage = transactionRepository.findAll(pageable);
         return transactionPage.map(this::entityToDto);
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteById(Long id, Long accountId, Long categoryId) {
+        Account account = accountRepository.findById(accountId).orElseThrow(
+                () -> new ResourceNotFoundException("Account with id=" + accountId + " not found")
+        );
+        return account.deleteTransactionById(id, categoryId);
     }
 
     @Override

@@ -54,16 +54,16 @@ public class Category {
         transactions.add(newTransaction);
     }
 
-    public void removeTransactionById(Long id) {
+    public boolean deleteTransactionById(Long id) {
         Transaction transaction = getTransactionById(id);
-        transactions.remove(transaction);
+        return transactions.remove(transaction);
     }
 
     public Transaction getTransactionById(Long id) {
         return transactions.stream()
                 .filter(t -> t.getId().equals(id))
                 .findFirst()
-                .orElseThrow(() -> new ResourceNotFoundException("Transaction with id:" + id + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction with id=" + id + " not found"));
     }
 
 }

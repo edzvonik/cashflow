@@ -23,7 +23,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Builder
-@ToString
+@ToString // TODO: Refactor
 @EqualsAndHashCode(of = "id")
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

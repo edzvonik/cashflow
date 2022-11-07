@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -124,6 +125,32 @@ class DefaultTransactionServiceImplTest {
 
         assertThat(transactionDtoPage).usingRecursiveComparison().isEqualTo(transactionPage);
         assertThat(dtoFromPage).usingRecursiveComparison().isEqualTo(transaction);
+    }
+
+    @Test
+    void deleteById_WhenExist_ThenReturnTrue() {
+        Transaction transaction = Transaction.builder()
+                .id(7L)
+                .amount(new BigDecimal("45.12"))
+                .type(TransactionType.INCOME)
+                .date(LocalDate.of(2021, 9, 5))
+                .comment("Delete transaction test")
+                .accountId(1L)
+                .categoryId(2L)
+                .build();
+        Category category = new Category(2L, "Pets", new ArrayList<>(List.of(transaction)));
+        List<Category> categories = new ArrayList<>(List.of(category));
+        Account account = Account.builder()
+                .id(1L)
+                .transactions(new ArrayList<>(List.of(transaction)))
+                .categories(categories)
+                .build();
+
+        when(accountRepository.findById(1L)).thenReturn(Optional.ofNullable(account));
+        boolean result = transactionService.deleteById(7L, 1L, 2L);
+
+        assertThat(result).isTrue();
+        verify(accountRepository).findById(1L);
     }
 
     @Test
