@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -59,6 +60,13 @@ class CashflowIT extends DatabaseIT {
                         jsonPath("$.transaction.accountId").value(1),
                         jsonPath("$.transaction.categoryId").value(3)
                 );
+    }
+
+    @Test
+    void deleteById() throws Exception {
+        mockMvc.perform(delete("/transaction/5?accountId=1&categoryId=3")
+                .contentType("application/json"))
+                .andExpect(status().isNoContent());
     }
 
 }
