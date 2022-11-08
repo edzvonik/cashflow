@@ -25,16 +25,12 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -63,12 +59,12 @@ class TransactionControllerTest {
 
         when(transactionService.create(any(TransactionDto.class))).thenReturn(1L);
 
-        mockMvc.perform(post("/transaction/new")
+        mockMvc.perform(post("/transactions/new")
                 .contentType("application/json")
                 .content(mapper.writeValueAsString(dto)))
                 .andExpectAll(
                         status().isCreated(),
-                        jsonPath("$.path").value("/transaction/1")
+                        jsonPath("$.path").value("/transactions/1")
                 );
     }
 
@@ -85,13 +81,13 @@ class TransactionControllerTest {
 
         when(transactionService.create(any(TransactionDto.class))).thenThrow(new ResourceNotFoundException("Account with id=5 not found"));
 
-        mockMvc.perform(post("/transaction/new")
+        mockMvc.perform(post("/transactions/new")
                 .contentType("application/json")
                 .content(mapper.writeValueAsString(dto)))
                 .andExpectAll(
                         status().isNotFound(),
                         jsonPath("$.message").value("Account with id=5 not found"),
-                        jsonPath("$.uri").value("/transaction/new")
+                        jsonPath("$.uri").value("/transactions/new")
                 );
     }
 
@@ -99,7 +95,7 @@ class TransactionControllerTest {
     void create_WhenFieldsEmpty_ThenCorrectResponse() throws Exception {
         TransactionDto dto = TransactionDto.builder().build();
 
-        mockMvc.perform(post("/transaction/new")
+        mockMvc.perform(post("/transactions/new")
                 .contentType("application/json")
                 .content(mapper.writeValueAsString(dto)))
                 .andExpectAll(
@@ -127,7 +123,7 @@ class TransactionControllerTest {
 
         when(transactionService.getById(22L, 5L)).thenReturn(dto);
 
-        mockMvc.perform(get("/transaction/22?accountId=5")
+        mockMvc.perform(get("/transactions/22?accountId=5")
                 .contentType("application/json"))
                 .andExpectAll(
                         status().isOk(),
@@ -161,7 +157,7 @@ class TransactionControllerTest {
 
         when(transactionService.getAll(any())).thenReturn(pageDto);
 
-        MvcResult result = mockMvc.perform(get("/transaction?page=0&size=3")
+        MvcResult result = mockMvc.perform(get("/transactions?page=0&size=3")
                 .contentType("application/json"))
                 .andExpectAll(
                         status().isOk(),
@@ -180,7 +176,7 @@ class TransactionControllerTest {
     void deleteById_WhenExist_ThenReturnNoContentStatus() throws Exception {
         when(transactionService.deleteById(any(), any(), any())).thenReturn(true);
 
-        mockMvc.perform(delete("/transaction/1?accountId=1&categoryId=2")
+        mockMvc.perform(delete("/transactions/1?accountId=1&categoryId=2")
                 .contentType("application/json"))
                 .andExpect(status().isNoContent());
     }
@@ -189,22 +185,9 @@ class TransactionControllerTest {
     void deleteById_WhenBadRequest_ThenReturnBadRequestStatus() throws Exception {
         when(transactionService.deleteById(any(), any(), any())).thenReturn(false);
 
-        mockMvc.perform(delete("/transaction/1")
+        mockMvc.perform(delete("/transactions/1")
                 .contentType("application/json"))
                 .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    void deleteById_WhenNotExist_ThenReturnResourceNotFound() throws Exception {
-        when(transactionService.deleteById(any(), any(), any())).thenThrow(new ResourceNotFoundException("Transaction with id=5 not found"));
-
-        mockMvc.perform(delete("/transaction/5")
-                .contentType("application/json"))
-                .andExpectAll(
-                        status().isNotFound(),
-                        jsonPath("$.message").value("Transaction with id=5 not found"),
-                        jsonPath("$.uri").value("/transaction/5")
-                );
     }
 
 }

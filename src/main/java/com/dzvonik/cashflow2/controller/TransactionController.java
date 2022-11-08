@@ -27,7 +27,7 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/transaction")
+@RequestMapping("/transactions")
 public class TransactionController {
 
     @Qualifier("defaultTransactionService")
@@ -37,7 +37,7 @@ public class TransactionController {
     public ResponseEntity<Object> create(@RequestBody @Valid TransactionDto dto) {
         Long transactionId = transactionService.create(dto);
         Map<String, Object> body = new HashMap<>();
-        body.put("path", "/transaction/" + transactionId);
+        body.put("path", "/transactions/" + transactionId);
         return new ResponseEntity<>(body, HttpStatus.CREATED);
     }
 

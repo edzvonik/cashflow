@@ -38,7 +38,7 @@ class CashflowIT extends DatabaseIT {
                 .categoryId(3L)
                 .build();
 
-        mockMvc.perform(post("/transaction/new")
+        mockMvc.perform(post("/transactions/new")
                 .contentType("application/json")
                 .content(mapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated());
@@ -46,7 +46,7 @@ class CashflowIT extends DatabaseIT {
 
     @Test
     void getById() throws Exception {
-        mockMvc.perform(get("/transaction/5?accountId=1")
+        mockMvc.perform(get("/transactions/5?accountId=1")
                 .contentType("application/json"))
                 .andExpectAll(
                         status().isOk(),
@@ -63,7 +63,7 @@ class CashflowIT extends DatabaseIT {
 
     @Test
     void deleteById() throws Exception {
-        mockMvc.perform(delete("/transaction/5?accountId=1&categoryId=3")
+        mockMvc.perform(delete("/transactions/5?accountId=1&categoryId=3")
                 .contentType("application/json"))
                 .andExpect(status().isNoContent());
     }
