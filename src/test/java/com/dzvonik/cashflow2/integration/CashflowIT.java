@@ -46,7 +46,6 @@ class CashflowIT extends DatabaseIT {
 
     @Test
     void getById() throws Exception {
-        // (5, '250.11', 'INCOME', '2022-08-17', 'Подработка в такси', 1, 3)
         mockMvc.perform(get("/transaction/5?accountId=1")
                 .contentType("application/json"))
                 .andExpectAll(
