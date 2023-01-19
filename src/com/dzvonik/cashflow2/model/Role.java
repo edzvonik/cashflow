@@ -3,7 +3,9 @@ package com.dzvonik.cashflow2.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,7 +24,8 @@ import lombok.ToString;
 public class Role {
 
   @Id
-  @GeneratedValue
+  @SequenceGenerator(name = "seq_role", sequenceName = "seq_role")
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_role")
   private Long id;
 
   @Column(nullable = false)
