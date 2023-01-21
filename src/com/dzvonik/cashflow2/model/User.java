@@ -29,7 +29,7 @@ import lombok.ToString;
 @Builder
 @Table(name = "\"user\"")
 @EqualsAndHashCode(of = "id")
-@ToString(exclude = {"baseCurrency", "accounts"})
+@ToString(exclude = {"baseCurrency", "accounts", "roles"})
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
