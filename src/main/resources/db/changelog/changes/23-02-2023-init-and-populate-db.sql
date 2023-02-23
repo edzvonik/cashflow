@@ -3,7 +3,7 @@ DROP TABLE IF EXISTS transaction;
 CREATE TABLE transaction
 (
     transaction_id SERIAL PRIMARY KEY,
-    created_at     TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    created_at     DATE NOT NULL DEFAULT CURRENT_DATE,
     amount         NUMERIC NOT NULL,
     comment        VARCHAR
 );
