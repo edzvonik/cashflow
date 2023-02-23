@@ -5,6 +5,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-    <li th:each="transaction : ${transactions}" th:text="${transaction}"></li>
+    <h1>Transactions</h1>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Created_at</th>
+            <th>Amount</th>
+            <th>Comment</th>
+        </tr>
+        <tr th:each="transaction : ${transactions}">
+            <td th:text="${transaction.getTransaction_id}"></td>
+            <td th:text="${transaction.getCreated_at}"></td>
+            <td th:text="${transaction.getAmount}"></td>
+            <td th:text="${transaction.getComment}"></td>
+        </tr>
+    </table>
 </body>
 </html>
