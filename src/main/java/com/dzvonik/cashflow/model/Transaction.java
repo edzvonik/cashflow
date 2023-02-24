@@ -1,5 +1,7 @@
 package com.dzvonik.cashflow.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,9 +17,11 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int transaction_id;
-    private LocalDate created_at;
     private BigDecimal amount;
     private String comment;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate created_at;
 
     public Transaction() {
     }
@@ -43,4 +47,17 @@ public class Transaction {
     public String getComment() {
         return comment;
     }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public void setCreated_at(LocalDate created_at) {
+        this.created_at = created_at;
+    }
+
 }

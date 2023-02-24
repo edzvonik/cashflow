@@ -6,6 +6,41 @@
 </head>
 <body>
     <h1>Transactions</h1>
+    <a id="toggle" href="">Add transaction...</a>
+    <form id="add-form"
+          method="post"
+          th:action="@{/transactions/new}"
+          th:object="${transaction}"
+          style="display: block; width: 250px; margin: 10px 0px; padding: 0px 10px 10px 10px; border: 1px solid;">
+<!--        <p>Type: </p>-->
+<!--        <select id="type" th:field="*{type}">-->
+<!--            <option value="INCOME" hidden>INCOME</option>-->
+<!--            <option value="EXPENSE" hidden>EXPENSE</option>-->
+<!--        </select>-->
+
+        <p>Amount: </p>
+        <input type="text" th:field="*{amount}">
+
+        <p>Comment: </p>
+        <input type="text" th:field="*{comment}">
+
+        <p>Date: </p>
+        <input type="date" th:field="*{created_at}">
+
+        <input type="submit" value="Add">
+    </form>
+<!--    <form method="post" th:action="@{/users/}" th:object="${userInfo}">-->
+<!--        <input id="firstName" placeholder="Enter First Name" required type="text" th:field="*{firstName}"/>-->
+<!--        <input id="lastName" placeholder="Enter Last Name" required type="text" th:field="*{lastName}"/>-->
+<!--        <select id="role" required th:field="*{role}">-->
+<!--            <option value="" hidden>Select a role</option>-->
+<!--            <option value="GUEST" hidden>GUEST</option>-->
+<!--            <option value="USER" hidden>USER</option>-->
+<!--            <option value="ADMIN" hidden>ADMIN</option>-->
+<!--        </select>-->
+<!--        </div>-->
+<!--        <input type="submit" value="Create User">-->
+<!--    </form>-->
 
     <table>
         <tr>
@@ -21,5 +56,21 @@
             <td th:text="${transaction.getComment}"></td>
         </tr>
     </table>
+
+    <script>
+        const btn = document.getElementById('toggle');
+
+        btn.addEventListener('click', () => {
+            const form = document.getElementById('add-form');
+
+            if (form.style.display === 'none') {
+                // 👇️ this SHOWS the form
+                form.style.display = 'block';
+            } else {
+                // 👇️ this HIDES the form
+                form.style.display = 'none';
+            }
+        });
+    </script>
 </body>
 </html>
