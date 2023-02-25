@@ -3,6 +3,10 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/templates/transactions.css">
+    <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css">
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
     <h1>Transactions</h1>
@@ -57,19 +61,205 @@
         </tr>
     </table>
 
+    <div class="container">
+        <div class="row navbar-row">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        <i class="bi bi-coin"></i></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Browse</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="#">Transactions</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Categories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Accounts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Budget / Goals</a>
+                            </li>
+
+                            <!--         <li class="nav-item">
+                                      <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a> -->
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Settings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Exit</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="row page-header-row">
+            <h2>Transactions</h2>
+        </div>
+
+        <div class="row justify-content-between">
+            <div class="col-8 me-2">
+                <div class="row mb-3">
+                    <div class="col-12 pt-2 pb-2" style="border:3px solid #FED9B7">
+                        <button type="button" id="show-form" class="btn btn-link">Add transaction</button>
+                        <form action="" id="add-transaction-form" class="hidden">
+                            <!-- Type -->
+                            <div class="mb-3">
+                                <label for="" class="form-label">Type: </label>
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected>Income or Expense?</option>
+                                    <option value="INCOME">Income</option>
+                                    <option value="EXPENSE">Expense</option>
+                                </select>
+                            </div>
+                            <!-- Amount -->
+                            <div class="mb-3">
+                                <label for="" class="form-label">Amount:</label>
+                                <input type="text" class="form-control" placeholder="458.2">
+                            </div>
+                            <!-- Comment -->
+                            <div class="mb-3">
+                                <label for="" class="form-label">Comment:</label>
+                                <input type="text" class="form-control" placeholder="Buy cat food">
+                            </div>
+                            <!-- Date -->
+                            <div class="mb-3">
+                                <label for="" class="form-label">Date:</label>
+                                <input type="date" class="form-control" placeholder="">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add</button>
+                            <button type="button" id="cancel-button" class="btn btn-secondary">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+                <!--   Search and Filter    -->
+                <div class="row mb-3">
+                    <div class="col-12 ps-0 pe-0">
+                        <form class="d-flex">
+                            <input class="form-control me-2" type="search" placeholder="Search by amount / comment / date" aria-label="Search">
+                            <select class="form-select me-2" aria-label="Default select example">
+                                <option selected>Criteria...</option>
+                                <option value="Amount">Amount</option>
+                                <option value="Comment">Comment</option>
+                                <option value="Date">Date</option>
+                            </select>
+                            <button class="btn btn-outline-secondary" type="submit">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 ps-0 pe-0">
+                        <table class="table">
+                            <thead class="thead">
+                            <tr>
+                                <!-- <th scope="col">ID</th> -->
+                                <th scope="col">Comment</th>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Created At</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Wheels for car</td>
+                                <td>3599.12</td>
+                                <td>02-24-2023</td>
+                            </tr>
+                            <tr>
+                                <td>Wheels for car</td>
+                                <td>3599.12</td>
+                                <td>02-24-2023</td>
+                            </tr>
+                            <tr>
+                                <td>Wheels for car</td>
+                                <td>3599.12</td>
+                                <td>02-24-2023</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2 ps-0">
+                        <button type="button" id="show-form" class="btn btn-link ps-0">Load more!</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3" >
+                <div class="row" style="border:3px solid #FED9B7">
+                    <div class="row">
+                        <div class="col-12 pt-3 ps-3">
+                            <table class="table table-sm table-borderless">
+                                <tbody>
+                                <tr>
+                                    <td style="font-size: 26px"><b>Total:</b></td>
+                                    <td style="text-align: end; font-size: 26px;"><b>1403.13 RUB</b></td>
+                                </tr>
+                                <tr>
+                                    <td><a href="">Card1</a></td>
+                                    <td style="text-align: end;">532.20</td>
+                                </tr>
+                                <tr>
+                                    <td ><a href="">Card2</a></td>
+                                    <td style="text-align: end;">32.20</td>
+                                </tr>
+                                <tr>
+                                    <td><a href="">Cash</a></td>
+                                    <td style="text-align: end;">2.20</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 pt-3 ps-3">
+                            <table class="table table-sm table-borderless">
+                                <tbody>
+                                <tr>
+                                    <td style="font-size: 26px"><b>Expenses:</b></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Day</b></td>
+                                    <td style="text-align: end;">532.20</td>
+                                </tr>
+                                <tr>
+                                    <td ><b>Week</b></td>
+                                    <td style="text-align: end;">32.20</td>
+                                </tr>
+                                <tr>
+                                    <td><b>Month</b></td>
+                                    <td style="text-align: end;">2.20</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
     <script>
-        const btn = document.getElementById('toggle');
+        $("#show-form").click(function() {
+            $(this).toggle("hidden");
+            $("#add-transaction-form").toggle("hidden");
+        });
 
-        btn.addEventListener('click', () => {
-            const form = document.getElementById('add-form');
-
-            if (form.style.display === 'none') {
-                // 👇️ this SHOWS the form
-                form.style.display = 'block';
-            } else {
-                // 👇️ this HIDES the form
-                form.style.display = 'none';
-            }
+        $("#cancel-button").click(function() {
+            $("#add-transaction-form").trigger("reset");
+            $("#show-form").toggle("hidden");
+            $("#add-transaction-form").toggle("hidden");
         });
     </script>
 </body>
