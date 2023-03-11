@@ -7,59 +7,6 @@
     <link rel="stylesheet" href="../../resources/static/css/transactions.css">
 </head>
 <body>
-
-<!--    <h1>Transactions</h1>-->
-<!--    <a id="toggle" href="">Add transaction...</a>-->
-<!--    <form id="add-form"-->
-<!--          method="post"-->
-<!--          th:action="@{/transactions/new}"-->
-<!--          th:object="${transaction}"-->
-<!--          style="display: block; width: 250px; margin: 10px 0px; padding: 0px 10px 10px 10px; border: 1px solid;">-->
-<!--        <p>Type: </p>-->
-<!--        <select id="type" th:field="*{type}">-->
-<!--            <option value="INCOME" hidden>INCOME</option>-->
-<!--            <option value="EXPENSE" hidden>EXPENSE</option>-->
-<!--        </select>-->
-
-<!--        <p>Amount: </p>-->
-<!--        <input type="text" th:field="*{amount}">-->
-
-<!--        <p>Comment: </p>-->
-<!--        <input type="text" th:field="*{comment}">-->
-
-<!--        <p>Date: </p>-->
-<!--        <input type="date" th:field="*{created_at}">-->
-
-<!--        <input type="submit" value="Add">-->
-<!--    </form>-->
-<!--    <form method="post" th:action="@{/users/}" th:object="${userInfo}">-->
-<!--        <input id="firstName" placeholder="Enter First Name" required type="text" th:field="*{firstName}"/>-->
-<!--        <input id="lastName" placeholder="Enter Last Name" required type="text" th:field="*{lastName}"/>-->
-<!--        <select id="role" required th:field="*{role}">-->
-<!--            <option value="" hidden>Select a role</option>-->
-<!--            <option value="GUEST" hidden>GUEST</option>-->
-<!--            <option value="USER" hidden>USER</option>-->
-<!--            <option value="ADMIN" hidden>ADMIN</option>-->
-<!--        </select>-->
-<!--        </div>-->
-<!--        <input type="submit" value="Create User">-->
-<!--    </form>-->
-
-<!--    <table>-->
-<!--        <tr>-->
-<!--            <th>ID</th>-->
-<!--            <th>Created_at</th>-->
-<!--            <th>Amount</th>-->
-<!--            <th>Comment</th>-->
-<!--        </tr>-->
-<!--        <tr th:each="transaction : ${transactions}">-->
-<!--            <td th:text="${transaction.getTransaction_id}"></td>-->
-<!--            <td th:text="${transaction.getCreated_at}"></td>-->
-<!--            <td th:text="${transaction.getAmount}"></td>-->
-<!--            <td th:text="${transaction.getComment}"></td>-->
-<!--        </tr>-->
-<!--    </table>-->
-
 <div class="container">
     <div class="row navbar-row">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -110,7 +57,11 @@
             <div class="row mb-3">
                 <div class="col-12 pt-2 pb-2" style="border:3px solid #FED9B7">
                     <button type="button" id="show-form" class="btn btn-link">Add transaction</button>
-                    <form action="" id="add-transaction-form" class="hidden">
+                    <form
+                            th:action="@{/transactions/new}"
+                            th:object="${transaction}"
+                            method="post"
+                            id="add-transaction-form" class="hidden">
                         <!-- Type -->
                         <div class="mb-3">
                             <label for="" class="form-label">Type: </label>
@@ -123,17 +74,17 @@
                         <!-- Amount -->
                         <div class="mb-3">
                             <label for="" class="form-label">Amount:</label>
-                            <input type="text" class="form-control" placeholder="458.2">
+                            <input type="text" th:field="*{amount}" class="form-control" placeholder="458.2">
                         </div>
                         <!-- Comment -->
                         <div class="mb-3">
                             <label for="" class="form-label">Comment:</label>
-                            <input type="text" class="form-control" placeholder="Buy cat food">
+                            <input type="text" th:field="*{comment}" class="form-control" placeholder="Buy cat food">
                         </div>
                         <!-- Date -->
                         <div class="mb-3">
                             <label for="" class="form-label">Date:</label>
-                            <input type="date" class="form-control" placeholder="">
+                            <input type="date" th:field="*{created_at}" class="form-control" placeholder="">
                         </div>
                         <button type="submit" class="btn btn-primary">Add</button>
                         <button type="button" id="cancel-button" class="btn btn-secondary">Cancel</button>
@@ -160,29 +111,18 @@
                 <div class="col-12 ps-0 pe-0">
                     <table class="table">
                         <thead class="thead">
-                        <tr>
-                            <!-- <th scope="col">ID</th> -->
-                            <th scope="col">Comment</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col">Created At</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">Amount</th>
+                                <th scope="col">Comment</th>
+                                <th scope="col">Created At</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>Wheels for car</td>
-                            <td>3599.12</td>
-                            <td>02-24-2023</td>
-                        </tr>
-                        <tr>
-                            <td>Wheels for car</td>
-                            <td>3599.12</td>
-                            <td>02-24-2023</td>
-                        </tr>
-                        <tr>
-                            <td>Wheels for car</td>
-                            <td>3599.12</td>
-                            <td>02-24-2023</td>
-                        </tr>
+                            <tr th:each="transaction : ${transactions}">
+                                <td th:text="${transaction.getAmount}">3599.12</td>
+                                <td th:text="${transaction.getComment}">Wheels for car</td>
+                                <td th:text="${transaction.getCreated_at}">02-24-2023</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
