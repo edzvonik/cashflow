@@ -1,5 +1,5 @@
 # Cashflow
-Simple REST API for home accounting allows you to manage accounts, categories, transactions
+Simple app for home accounting allows you to manage accounts, categories, transactions
 
 ## Prerequisites
 * Java 11 or newer
